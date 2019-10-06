@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
          $table->decimal('price');
          $table->integer('stock');
          $table->string('description');
+         $table->string('image');
          $table->unsignedBigInteger('user_id')->nullable();
          $table->foreign('user_id')->references('id')->on('users');
          $table->softDeletes();
