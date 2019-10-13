@@ -70,11 +70,10 @@ class ProductsController extends Controller
         $product->rating = $request['rating'];
         $image = $request->file('image');
         $finalImage = uniqid("img_") . "." . $image->extension();
-        $saveImage = $image->storeAs($finalImage, '/public/products');
+        $saveImage = $image->storeAs('/public/products',$finalImage);
         $product->image= $finalImage;
         $product->save();
         return redirect('products');
-
     }
 
     /**
@@ -85,7 +84,8 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+        return view('product.show', compact('product'));
     }
 
     /**
@@ -96,7 +96,9 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::find($id);
+        return view('product.edit', compact('product'));
+
     }
 
     /**
@@ -108,7 +110,21 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+
+        $product->name = $request['name']!== null ? $request['name'] : $product['name'];
+        $product->price = $request['price']!== null ? $request['price'] : $product['price'];
+        $product->stock = $request['stock']!== null ? $request['stock'] : $product['stock'];
+        $product->description = $request['description']!== null ? $request['description'] : $product['description'];
+        $product->rating = $request['rating']!== null ? $request['rating'] : $product['rating'];
+        if($request->file('image')!==null){
+        $image = $request->file('image');
+        $finalImage = uniqid("img_") . "." . $image->extension();
+        $saveImage = $image->storeAs($finalImage, '/public/products');
+        $product->image= $finalImage;
+        }
+        $product->save();
+        return redirect('/products');
     }
 
     /**
